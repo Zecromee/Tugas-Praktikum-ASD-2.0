@@ -1,52 +1,113 @@
-# Prerequisites
-*.d
+// Kartu Refan
 
-# Object files
-*.o
-*.ko
-*.obj
-*.elf
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-# Linker output
-*.ilk
-*.map
-*.exp
+// Fungsi untuk mengonversi kartu menjadi angka (untuk mempermudah perbandingan)
+int convertCardValue(char card) {
+    if (card >= '2' && card <= '9')
+        return card - '0';
+    else if (card == '1' || card == 'J')
+        return 10;
+    else if (card == 'Q')
+        return 11;
+    else if (card == 'K')
+        return 12;
+    return -1; // Kartu invalid
+}
 
-# Precompiled Headers
-*.gch
-*.pch
+// Fungsi untuk mengurutkan kartu menggunakan algoritma Bubble Sort
+int bubbleSort(int *cards, int n) {
+    int steps = 0;
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (cards[j] > cards[j + 1]) {
+                // Swap cards
+                int temp = cards[j];
+                cards[j] = cards[j + 1];
+                cards[j + 1] = temp;
 
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
+                // Menghitung Pengurutan
+                steps++;
 
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
+                // Menampilkan urutan setiap perulangan
+                printf("Pertukaran %d: ", steps);
+                for (int k = 0; k < n; k++) {
+                    printf("%d ", cards[k]);
+                }
+                printf("\n");
+            }
+        }
+    }
+    return steps;
+}
 
-# Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
-*.hex
+int main() {
+    int N;
+    scanf("%d", &N);
 
-# Debug files
-*.dSYM/
-*.su
-*.idb
-*.pdb
+    // Membaca kartu-kartu yang dimiliki Refan
+    int *cards = (int *)malloc(N * sizeof(int));
+    char input[3];
+    for (int i = 0; i < N; i++) {
+        scanf("%s", input);
+        cards[i] = convertCardValue(input[0]);
+    }
 
-# Kernel Module Compile Results
-*.mod*
-*.cmd
-.tmp_versions/
-modules.order
-Module.symvers
-Mkfile.old
-dkms.conf
+    // Mengurutkan kartu menggunakan Bubble Sort dan menghitung jumlah langkah pertukaran
+    int minSteps = bubbleSort(cards, N);
+
+    printf("Jumlah langkah pertukaran: %d\n", minSteps);
+
+    free(cards); // Membebaskan memori yang dialokasikan untuk array kartu
+    return 0;
+}
+
+
+//Kuda Kobo
+
+#include <stdio.h>
+#include <stdlib.h>
+
+void koboImaginaryChess(int i, int j, int size, int *chessBoard) {
+    // Array untuk menyimpan pergerakan kuda
+    int moves[8][2] = {{-2, -1}, {-2, 1}, {2, -1}, {2, 1},
+                       {-1, -2}, {-1, 2}, {1, -2}, {1, 2}};
+
+    // Melakukan pengecekan dan menandai posisi yang dapat dicapai oleh kuda
+    for (int k = 0; k < 8; k++) {
+        int x = i + moves[k][0];
+        int y = j + moves[k][1];
+        if (x >= 0 && x < size && y >= 0 && y < size) {
+            chessBoard[x * size + y] = 1;
+        }
+    }
+
+    // Menampilkan papan catur setelah simulasi pergerakan kuda
+    printf("Papan catur setelah simulasi pergerakan kuda:\n");
+    for (int x = 0; x < size; x++) {
+        for (int y = 0; y < size; y++) {
+            printf("%d ", chessBoard[x * size + y]);
+        }
+        printf("\n");
+    }
+}
+
+int main() {
+    int i, j;
+    scanf("%d %d", &i, &j);
+
+    int size = 8;
+    int *chessBoard = (int *)malloc(size * size * sizeof(int));
+    // Menginisialisasi papan catur dengan nilai 0
+    for (int k = 0; k < size * size; k++) {
+        chessBoard[k] = 0;
+    }
+
+    // Memanggil fungsi koboImaginaryChess untuk mensimulasikan pergerakan kuda
+    koboImaginaryChess(i, j, size, chessBoard);
+
+    free(chessBoard); // Membebaskan memori yang dialokasikan untuk papan catur
+    return 0;
+}
